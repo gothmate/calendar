@@ -12,6 +12,24 @@
   gap: 2rem
   font-family: 'Segoe UI', sans-serif
 
+.input
+  @include variables.flex(center, center, column )
+  width: 100%
+  margin-top: 1rem
+  padding: 0.5rem 1rem
+  border-radius: 5px
+  border: none
+  background: variables.$background
+  color: variables.$foreground
+.inputcontainer
+  & .invert
+    margin-block: 1rem
+    min-width: 70ch
+    border: solid 2px variables.$foreground
+    box-shadow: 1px 1px 5px variables.$foreground
+    color: variables.$foreground
+    filter: brightness(0.9)
+
 .main 
   @include variables.flex(flex-start, flex-start)
   flex: 1

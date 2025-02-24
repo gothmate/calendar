@@ -1,53 +1,57 @@
-"use client";
+"use client"
 
-import styles from "@/app/page.module.sass";
-import style from "./page.module.sass";
-import FullCalendar from "@fullcalendar/react";
-import interactionPlugin, {
-    Draggable,
-    DropArg,
-} from "@fullcalendar/interaction";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import { useEffect, useState, Fragment } from "react";
-import {
-    Dialog,
-    DialogPanel,
-    DialogTitle,
-    Transition,
-    TransitionChild,
-} from "@headlessui/react";
-import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/20/solid";
-import { EventSourceInput } from "@fullcalendar/core/index.js";
+import styles from "@/app/page.module.sass"
+import style from "./page.module.sass"
+import FullCalendar from "@fullcalendar/react"
+import interactionPlugin, { Draggable, DropArg } from "@fullcalendar/interaction"
+import dayGridPlugin from "@fullcalendar/daygrid"
+import timeGridPlugin from "@fullcalendar/timegrid"
+import { useEffect, useState, Fragment } from "react"
+import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@headlessui/react"
+import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/20/solid"
+import { EventSourceInput } from "@fullcalendar/core/index.js"
+import Link from "next/link"
 
 interface Event {
-    title: string;
-    start: Date | string;
-    allDay: boolean;
-    id: number;
+    title: string
+    start: Date | string
+    allDay: boolean
+    id: number
 }
 
 export function Calendar() {
-    const [events, setEvents] = useState([{ title: "", id: 0 }]);
-    const [allEvents, setAllEvents] = useState<Event[]>([]);
-    const [showModal, setShowModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [idToDelete, setIdToDelete] = useState<number | null>(null);
+    const [events, setEvents] = useState([{ title: "", id: 0 }])
+    const [pacientes, setPacientes] = useState([{ nome: "", id: 0 }])
+    const [allEvents, setAllEvents] = useState<Event[]>([])
+    const [showModal, setShowModal] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [idToDelete, setIdToDelete] = useState<number | null>(null)
     const [newEvent, setNewEvent] = useState<Event>({
         title: "",
         start: "",
         allDay: false,
         id: 0,
-    });
+    })
 
-    function handleDateClick(arg: { date: Date; allDay: boolean }): void {
+    async function getPacientes() {
+        const res = await fetch('/api/db', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        console.log("GET:", res)
+        return res.json()
+    }
+
+    function handleDateClick(arg: { date: Date, allDay: boolean }): void {
         setNewEvent({
             ...newEvent,
             start: arg.date,
             allDay: arg.allDay,
             id: new Date().getTime(),
-        });
-        setShowModal(true);
+        })
+        setShowModal(true)
     }
 
     function addEvent(data: DropArg): void {
@@ -57,57 +61,69 @@ export function Calendar() {
             title: data.draggedEl.innerText,
             allDay: data.allDay,
             id: new Date().getTime(),
-        };
-        setAllEvents([...allEvents, event]);
+        }
+        setAllEvents([...allEvents, event])
     }
 
     function handleDeleteModal(data: { event: { id: string } }): void {
-        setShowDeleteModal(true);
-        setIdToDelete(Number(data.event.id));
+        setShowDeleteModal(true)
+        setIdToDelete(Number(data.event.id))
     }
 
     function handleDelete() {
         setAllEvents(
             allEvents.filter((event) => Number(event.id) !== Number(idToDelete))
-        );
-        setShowDeleteModal(false);
-        setIdToDelete(null);
+        )
+        setShowDeleteModal(false)
+        setIdToDelete(null)
     }
 
     function handleCloseModal() {
-        setShowModal(false);
+        setShowModal(false)
         setNewEvent({
             title: "",
             start: "",
             allDay: false,
             id: 0,
-        });
-        setShowDeleteModal(false);
-        setIdToDelete(null);
+        })
+        setShowDeleteModal(false)
+        setIdToDelete(null)
     }
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setAllEvents([...allEvents, newEvent]);
-        setEvents([...allEvents, newEvent]);
-        setShowModal(false);
+        e.preventDefault()
+        setAllEvents([...allEvents, newEvent])
+        setShowModal(false)
         setNewEvent({
             title: "",
             start: "",
             allDay: false,
             id: 0,
-        });
+        })
     }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
         setNewEvent({
             ...newEvent,
             title: e.target.value,
-        });
+        })
     }
 
     useEffect(() => {
-        let draggableEl = document.getElementById("draggable-el");
+        async function fetchPacientes() {
+            try {
+                const pacientes = await getPacientes()
+                console.log("Pacientes:", pacientes)
+                setPacientes(pacientes.res[0])
+            } catch (error) {
+                console.error("Erro ao buscar pacientes:", error)
+            }
+        }
+        fetchPacientes()
+    }, [])
+
+    useEffect(() => {
+        let draggableEl = document.getElementById("draggable-el")
         if (draggableEl) {
             new Draggable(draggableEl, {
                 itemSelector: ".fc-event",
@@ -115,11 +131,11 @@ export function Calendar() {
                     return {
                         title: eventEl.innerText,
                         id: String(new Date().getTime()),
-                    };
+                    }
                 },
-            });
+            })
         }
-    }, []);
+    }, [])
 
     return (
         <div className={style.calendarPage}>
@@ -129,8 +145,9 @@ export function Calendar() {
                     headerToolbar={{
                         left: "prev,next today",
                         center: "title",
-                        right: "resourceTimelineWook, dayGridMonth,timeGridWeek",
+                        right: "dayGridMonth,timeGridWeek,timeGridDay",
                     }}
+                    initialView="timeGridWeek"
                     events={allEvents as EventSourceInput}
                     nowIndicator={true}
                     editable={true}
@@ -143,14 +160,15 @@ export function Calendar() {
                 />
             </div>
             <div id="draggable-el" className={`${style.arrastar}`}>
-                <h3>Pacientes Agendados</h3>
-                {events.map((event) => (
+                <h3>Pacientes Cadastrados <Link className={style.plus} href={'/cadastro'}>+</Link></h3>
+                <input type="text" className={styles.input} placeholder="Filtre pelo nome" />
+                {pacientes.map((p) => (
                     <div
-                        key={event.id}
+                        key={p.id}
                         className={`fc-event ${style.evento}`}
-                        data-event={JSON.stringify({ title: event.title, id: event.id })}
+                        data-event={JSON.stringify({ nome: p.nome })}
                     >
-                        {event.title}
+                        {p.nome}
                     </div>
                 ))}
             </div>
@@ -270,7 +288,7 @@ export function Calendar() {
                                                         className={styles.input}
                                                         value={newEvent.title}
                                                         onChange={(e) => handleChange(e)}
-                                                        placeholder="Title"
+                                                        placeholder="Paciente"
                                                     />
                                                 </div>
                                                 <div className={styles.createBtn}>
@@ -299,5 +317,5 @@ export function Calendar() {
                 </Dialog>
             </Transition>
         </div>
-    );
+    )
 }
