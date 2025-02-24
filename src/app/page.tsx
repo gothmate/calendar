@@ -1,6 +1,5 @@
 import { Calendar } from "@/components/Calendar";
 import styles from "./page.module.sass";
-import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 
 export default function Home() {
@@ -10,7 +9,6 @@ export default function Home() {
       <main className={styles.main}>
         <Calendar />
       </main>
-      <Footer />
     </div>
   );
 }

@@ -1,8 +1,24 @@
 @use '../../app/variables'
 
-.calendar
+.calendarPage
   display: flex
   gap: 2rem
+  & ::-webkit-scrollbar
+    width: 0.5rem
+    background: variables.$foreground
+  & ::-webkit-scrollbar-thumb
+    background-color: variables.$background
+    border-radius: 20px
+    border: 3px solid variables.$button-primary-hover
+  & .calendar
+    color: variables.$foreground
+    th
+      background: variables.$button-secondary-hover
+      color: variables.$foreground
+    td
+      background: variables.$button-primary-hover
+      color: variables.$button-secondary-hover
+    
 .arrastar
   width: max-content
   padding: 1rem
@@ -15,13 +31,13 @@
   padding: 0.3rem
   border-radius: 5px
   color: variables.$background  
-  background: variables.$gray-alpha-100
+  background: variables.$gray-alpha-200
 .deleteModal
   position: relative
   overflow-y: auto
   z-index: 10
 .insideDeleteModal
-  @include variables.flex(center, flex-end)
+  @include variables.flex(center, center)
   position: fixed
   width: 100vw
   height: 100vh
@@ -35,21 +51,35 @@
   position: fixed
   background: variables.$gray-alpha
   transition: opacity 300ms ease-in-out
+.form
+  @include variables.flex(cente, center, column)
+  & .inputcontainer
+    min-width: 20rem
+    min-height: 3rem
+    margin: 2rem
+    & input
+      @include variables.flex(center, center, column )
+      width: 100%
+      padding: 0.5rem 1rem
+      border-radius: 5px
+      border: none
+      background: variables.$background
+      color: variables.$foreground
+      placeholder: nome do evento
 
-.input
-  border: solid red
-  @include variables.flex(center, center, column )
-  width: 100%
-  border-radius: 15px
-  color: variables.$background
-  placeholder: nome do evento
-  
+.check
+  @include variables.flex(center, center)
+  border-radius: 50%
+  background: variables.$button-green
+  margin: 2rem
+  // mx-auto flex h-12 w-12
 .exclamation
   @include variables.flex(center, center)
-  border: solid
-  // flex-shrink: 0
-  border-radius: 50%
+  padding: 1rem
   background: variables.$button-red
+  border-radius: 50%
+  border-radius: 50%
+  margin: 2rem
 
 .dialogs
   color: variables.$background

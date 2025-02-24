@@ -4,10 +4,11 @@
   @include variables.flex(center, center)
   width: 100vw
   padding: 1rem
-  background: variables.$gray-alpha-200
+  background: variables.$foreground
+  color: variables.$background
 
 .page 
-  @include variables.flex(flex-start, center, column)
+  @include variables.flex(center, center, column)
   gap: 2rem
   font-family: 'Segoe UI', sans-serif
 
@@ -32,16 +33,16 @@
 
   & code 
     font-family: inherit
-    background: variables.$gray-alpha-100
+    background: variables.$blue-alpha-100
     padding: 2px 4px
     border-radius: 4px
     font-weight: 600
 
 .footer 
-  @include variables.flex(center, center, )
+  @include variables.flex(center, center)
   width: 100vw
   padding: 1rem
-  background: variables.$gray-alpha-200
+
 .buttoms
   @include variables.flex(center, center)
   padding: 2rem
