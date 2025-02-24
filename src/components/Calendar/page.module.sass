@@ -1,0 +1,55 @@
+@use '../../app/variables'
+
+.calendar
+  display: flex
+  gap: 2rem
+.arrastar
+  width: max-content
+  padding: 1rem
+  border: solid 2px
+  border-radius: 15px
+  background: variables.$foreground
+  color: variables.$background
+.evento
+  margin: 0.5rem
+  padding: 0.3rem
+  border-radius: 5px
+  color: variables.$background  
+  background: variables.$gray-alpha-100
+.deleteModal
+  position: relative
+  overflow-y: auto
+  z-index: 10
+.insideDeleteModal
+  @include variables.flex(center, flex-end)
+  position: fixed
+  width: 100vw
+  height: 100vh
+  top: 0
+  left: 0
+  min-height: 100%
+  text-align: center
+  background: #3d3d3dbd
+  transition: opacity 300ms easy-in-out
+.modal
+  position: fixed
+  background: variables.$gray-alpha
+  transition: opacity 300ms ease-in-out
+
+.input
+  border: solid red
+  @include variables.flex(center, center, column )
+  width: 100%
+  border-radius: 15px
+  color: variables.$background
+  placeholder: nome do evento
+  
+.exclamation
+  @include variables.flex(center, center)
+  border: solid
+  // flex-shrink: 0
+  border-radius: 50%
+  background: variables.$button-red
+
+.dialogs
+  color: variables.$background
