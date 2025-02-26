@@ -11,6 +11,7 @@ import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@
 import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/20/solid"
 import { EventSourceInput } from "@fullcalendar/core/index.js"
 import Link from "next/link"
+import { capitalizeFirstLetter } from "@/wrappers/wrapperFunctions"
 
 interface Event {
     title: string
@@ -168,7 +169,7 @@ export function Calendar() {
                         className={`fc-event ${style.evento}`}
                         data-event={JSON.stringify({ nome: p.nome })}
                     >
-                        {p.nome}
+                        {capitalizeFirstLetter(p.nome)}
                     </div>
                 ))}
             </div>
@@ -225,14 +226,14 @@ export function Calendar() {
                                     <div className={styles.buttoms}>
                                         <button
                                             type="button"
-                                            className={styles.btn}
+                                            className={styles.btnR}
                                             onClick={handleDelete}
                                         >
                                             Apagar
                                         </button>
                                         <button
                                             type="button"
-                                            className={styles.btn}
+                                            className={styles.btnY}
                                             onClick={handleCloseModal}
                                         >
                                             Cancelar
@@ -294,14 +295,14 @@ export function Calendar() {
                                                 <div className={styles.createBtn}>
                                                     <button
                                                         type="submit"
-                                                        className={styles.btn}
+                                                        className={styles.btnG}
                                                         disabled={newEvent.title === ""}
                                                     >
                                                         Criar
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        className={styles.btn}
+                                                        className={styles.btnY}
                                                         onClick={handleCloseModal}
                                                     >
                                                         Cancelar

@@ -1,8 +1,8 @@
 export interface ICadastro {
     nome: string
-    cpf: number | null
+    cpf: string | null
     telefone: number | null
     seguradora: string
     plano: string
-    carteira: number | null
+    carteira: string | null
 }
