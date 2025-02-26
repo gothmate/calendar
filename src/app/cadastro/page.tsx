@@ -5,14 +5,16 @@ import styles from "@/app/page.module.sass"
 import style from "../../components/Calendar/page.module.sass"
 import { ChangeEvent, useState } from "react"
 import { ICadastro } from "@/types/interfaces"
+import { capitalizeFirstLetter, formatarTelefone, formatCPF } from "@/wrappers/wrapperFunctions"
+import Link from "next/link"
 
 export default function Cadastro() {
     const [nome, setNome] = useState('')
-    const [cpf, setCpf] = useState<number | null>(null)
+    const [cpf, setCpf] = useState<string>('')
     const [phone, setPhone] = useState<number | null>(null)
     const [seguradora, setSeguradora] = useState('')
     const [plano, setPlano] = useState('')
-    const [carteira, setCarteira] = useState<number | null>(null)
+    const [carteira, setCarteira] = useState('')
 
     async function cadastraPaciente(cadastro: ICadastro) {
       const res = await fetch('/api/db', {
@@ -40,30 +42,33 @@ export default function Cadastro() {
         console.log(res)
 
         setNome('')
-        setCpf(null)
+        setCpf('')
         setPhone(null)
         setSeguradora('')
         setPlano('')
-        setCarteira(null) 
+        setCarteira('') 
+
+
     }
 
     function handleNome(e: ChangeEvent<HTMLInputElement>):void {
-        setNome(e.target.value)
+        setNome(e.target.value.toLowerCase())
     }
     function handleCpf(e: ChangeEvent<HTMLInputElement>):void {
-        setCpf(Number(e.target.value))
+        setCpf(e.target.value)
     }
-    function handlePhone(e: ChangeEvent<HTMLInputElement>):void {
-        setPhone(Number(e.target.value))
+    function handlePhone(e:string):void {
+        setPhone(Number(e))
+        console.log("Phone: ", phone)
     }
     function handleSeguradora(e: ChangeEvent<HTMLInputElement>):void {
-        setSeguradora(e.target.value)
+        setSeguradora(e.target.value.toLowerCase())
     }
     function handlePlano(e: ChangeEvent<HTMLInputElement>):void {
-        setPlano(e.target.value)
+        setPlano(e.target.value.toLowerCase())
     }
     function handleCarteira(e: ChangeEvent<HTMLInputElement>):void {
-        setCarteira(Number(e.target.value))
+        setCarteira(e.target.value)
     }
 
 
@@ -80,6 +85,7 @@ export default function Cadastro() {
                 name="nome"
                 className={`${styles.input} ${styles.invert}`}
                 onChange={(e) => handleNome(e)}
+                value={capitalizeFirstLetter(nome)}
                 placeholder="Nome completo"
               />
               <input
@@ -87,19 +93,22 @@ export default function Cadastro() {
                 name="cpf"
                 className={`${styles.input} ${styles.invert}`}
                 onChange={(e) => handleCpf(e)}
+                value={formatCPF(cpf)}
                 placeholder="CPF somente números"
               />
               <input
                 type="text"
                 name="telefone"
                 className={`${styles.input} ${styles.invert}`}
-                onChange={(e) => handlePhone(e)}
-                placeholder="Telefone somente números"
+                onChange={(e) => handlePhone(e.target.value.replace(/\D/g, ''))}
+                value={formatarTelefone(String(phone).replace(/\D/g, ''))}
+                placeholder="Somente números DDD+Telefone"
               />
               <input
                 type="text"
                 name="seguradora"
                 className={`${styles.input} ${styles.invert}`}
+                value={capitalizeFirstLetter(seguradora)}
                 onChange={(e) => handleSeguradora(e)}
                 placeholder="Seguradora"
               />
@@ -108,6 +117,7 @@ export default function Cadastro() {
                 name="plano"
                 className={`${styles.input} ${styles.invert}`}
                 onChange={(e) => handlePlano(e)}
+                value={capitalizeFirstLetter(plano)}
                 placeholder="Plano"
               />
               <input
@@ -119,7 +129,8 @@ export default function Cadastro() {
               />
             </div>
             <div className={styles.createBtn}>
-              <button type="submit" className={styles.btn}>
+              <Link href={'/'} className={styles.btnR}>Voltar</Link>
+              <button type="submit" className={styles.btnG}>
                 Enviar
               </button>
             </div>
